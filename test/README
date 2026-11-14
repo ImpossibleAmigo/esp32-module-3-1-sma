@@ -1,11 +1,26 @@
+# Модуль 3.1: Проста ковзна середня (SMA)
 
-This directory is intended for PlatformIO Test Runner and project tests.
+## Опис проєкту
+Цей проєкт реалізує зчитування рівня освітленості з фоторезистора (LDR) та автоматичне керування світлодіодом (LED) на базі мікроконтролера **ESP32-S3** (фреймворк ESP-IDF).
 
-Unit Testing is a software testing method by which individual units of
-source code, sets of one or more MCU program modules together with associated
-control data, usage procedures, and operating procedures, are tested to
-determine whether they are fit for use. Unit testing finds problems early
-in the development cycle.
+Для усунення шумів АЦП застосовано програмний фільтр **Simple Moving Average (SMA)**. Щоб уникнути мерехтіння світлодіода на межі переходу між світлом і темрявою, імплементовано логіку **гістерезису** з двома порогами.
 
-More information about PlatformIO Unit Testing:
-- https://docs.platformio.org/en/latest/advanced/unit-testing/index.html
+## Апаратне підключення
+- **Мікроконтролер:** ESP32-S3
+- **LDR (Фоторезистор):** Підключений до `GPIO4` (ADC1_CHANNEL_3) у вигляді подільника напруги.
+- **LED (Світлодіод):** Підключений до `GPIO5`.
+
+## Програмні особливості
+- Зчитування АЦП у режимі **Oneshot**.
+- Розмір вікна SMA: `10` вимірів (циклічний буфер).
+- Поріг вмикання (стало темно): `SMA < 1000`
+- Поріг вимикання (стало світло): `SMA > 2000`
+- Зчитування відбувається неблокуючим чином або з мінімальною затримкою.
+
+## Результат виконання
+
+**1. Вивід у монітор порту (робота фільтра та гістерезису):**
+![Логи термінала](photo_2026-11-14_20-46-18.jpg)
+
+**2. Зібрана схема:**
+![Схема підключення](photo_2026-11-14_20-46-26.jpg)
